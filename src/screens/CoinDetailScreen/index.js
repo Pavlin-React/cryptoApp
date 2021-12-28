@@ -17,7 +17,7 @@ const CoinDetailScreen = () => {
     },
   } = Coin;
 
-  let procentageColor = price_change_percentage_24h < 0 ? "#ea3943" : "#16c784";
+  let percentageColor = price_change_percentage_24h < 0 ? "#ea3943" : "#16c784";
 
   return (
     <View style={{ padding: 10 }}>
@@ -33,7 +33,7 @@ const CoinDetailScreen = () => {
         </View>
         <View
           style={{
-            backgroundColor: procentageColor,
+            backgroundColor: percentageColor,
             borderRadius: 5,
             paddingHorizontal: 3,
             paddingVertical: 8,

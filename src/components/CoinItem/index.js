@@ -14,7 +14,7 @@ const CodeItem = ({ marketCoin }) => {
     image,
   } = marketCoin;
 
-  let procentageColor = price_change_percentage_24h < 0 ? "#ea3943" : "#16c784";
+  let percentageColor = price_change_percentage_24h < 0 ? "#ea3943" : "#16c784";
 
   let normalizeCap = (marketCap) => {
     if (marketCap > 1_000_000_000_000) {
@@ -48,10 +48,10 @@ const CodeItem = ({ marketCoin }) => {
           <AntDesign
             name={price_change_percentage_24h < 0 ? 'caretdown' : 'caretup'}
             size={12}
-            color={procentageColor}
+            color={percentageColor}
             style={{ alignSelf: "center", marginRight: 5 }}
           />
-          <Text style={{color: procentageColor}}>
+          <Text style={{color: percentageColor}}>
             {price_change_percentage_24h.toFixed(3)}%
           </Text>
         </View>
