@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Dimensions, TextInput } from "react-native";
 import CoinDetailHeader from "./components/CoinDetailHeader";
 import Coin from "../../../assets/data/crypto.json";
@@ -26,6 +26,9 @@ const CoinDetailScreen = () => {
     },
   } = Coin;
 
+  let [coinValue, setCoinValue] = useState('1');
+  let [usdValue, setUsdValue] = useState(current_price.usd.toString());
+
   let formatCurrency = (value) => {
     "worklet";
     if (value === "") {
@@ -35,6 +38,15 @@ const CoinDetailScreen = () => {
   };
 
   let percentageColor = price_change_percentage_24h < 0 ? "#ea3943" : "#16c784";
+
+  let changeCoinValue = (value) => {
+    setCoinValue(value);
+    setUsdValue(value * current_price.usd)
+  };
+
+  let changeUsdValue = (value) => {
+    setUsdValue(value)
+  };
 
   return (
     <View style={{ padding: 10 }}>
@@ -93,15 +105,21 @@ const CoinDetailScreen = () => {
             <Text style={{ color: "white", alignSelf: "center" }}>
               {symbol.toUpperCase()}
             </Text>
-            <TextInput value="1" style={styles.input} />
+            <TextInput
+              value={coinValue.toString()}
+              style={styles.input}
+              keyboardType="numeric"
+              onChangeText={changeCoinValue}
+            />
           </View>
 
           <View style={{ flexDirection: "row", flex: 1 }}>
             <Text style={{ color: "white", alignSelf: "center" }}>USD</Text>
             <TextInput
-              value={current_price.usd.toString()}
+              value={usdValue.toString()}
               style={styles.input}
-              keyboardType='numeric'
+              keyboardType="numeric"
+              onChangeText={changeUsdValue}
             />
           </View>
         </View>
