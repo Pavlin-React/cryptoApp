@@ -4,12 +4,15 @@ import CoinDetailScreen from "./src/screens/CoinDetailScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import CoinDetailHeader from "./src/screens/CoinDetailScreen/components/CoinDetailHeader";
 import { NavigationContainer } from "@react-navigation/native";
+import Navigation from "./src/navigation";
 
 export default function App() {
   return (
-    <NavigationContainer theme={{ color: {} }} style={styles.container}>
-      <HomeScreen />
-      <StatusBar style="light" />
+    <NavigationContainer theme={{ colors: { backgroundColor: "#121212" } }}>
+      <View style={styles.container}>
+        <Navigation />
+        <StatusBar style="light" />
+      </View>
     </NavigationContainer>
   );
 }

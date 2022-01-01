@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Dimensions, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  Dimensions,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
 import CoinDetailHeader from "./components/CoinDetailHeader";
 import Coin from "../../../assets/data/crypto.json";
 import styles from "./styles";
@@ -10,6 +16,9 @@ import {
   ChartPathProvider,
   ChartYLabel,
 } from "@rainbow-me/animated-charts";
+import { useRoute } from "@react-navigation/native";
+import { getDetailedCoinData, getCoinMarketChart } from '../../services/requests'
+
 
 let screenWidth = Dimensions.get("window").width;
 
@@ -26,8 +35,27 @@ const CoinDetailScreen = () => {
     },
   } = Coin;
 
-  let [coinValue, setCoinValue] = useState('1');
+  let [coinValue, setCoinValue] = useState("1");
   let [usdValue, setUsdValue] = useState(current_price.usd.toString());
+  let route = useRoute();
+  let { params: { coinId } } = route;
+  let [coin, setCoin] = useState(null)
+  let [coinMarketData, setCoinMarketData] = useState(nul)
+  let [loading, setLoading] = useState(false)
+
+
+  let fetchCoinData = async () => {
+    setLoading(true)
+    let fetchedCoinData =  await getDetailedCoinData(coinId)
+    let fetchedCoinMarketData = await getCoinMarketChart(coinId)
+    setCoinMarketData(fetchedCoinMarketData)
+    setCoin(fetchedCoinData)
+    setLoading(false)
+  }
+
+  useEffect(() =>{
+    fetchCoinData()
+  }, [])
 
   let formatCurrency = (value) => {
     "worklet";
@@ -41,12 +69,16 @@ const CoinDetailScreen = () => {
 
   let changeCoinValue = (value) => {
     setCoinValue(value);
-    setUsdValue(value * current_price.usd)
+    setUsdValue(value * current_price.usd);
   };
 
   let changeUsdValue = (value) => {
-    setUsdValue(value)
+    setUsdValue(value);
   };
+
+  if (loading || !coin || !coinMarketData ) {
+    <ActivityIndicator size='large' />
+  }
 
   return (
     <View style={{ padding: 10 }}>
@@ -75,12 +107,12 @@ const CoinDetailScreen = () => {
               flexDirection: "row",
             }}
           >
-            <AntDesign
-              name={price_change_percentage_24h < 0 ? "caretdown" : "caretup"}
-              size={12}
-              color="white"
-              style={{ alignSelf: "center", marginRight: 5 }}
-            />
+              <AntDesign
+                name={price_change_percentage_24h < 0 ? "caretdown" : "caretup"}
+                size={12}
+                color="white"
+                style={{ alignSelf: "center", marginRight: 5 }}
+              />
             <Text style={styles.priceChange}>
               {price_change_percentage_24h.toFixed(2)}%
             </Text>

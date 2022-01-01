@@ -1,9 +1,14 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import styles from "./style";
 import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
+
 
 const CodeItem = ({ marketCoin }) => {
+
+  
   let {
     current_price,
     name,
@@ -12,6 +17,7 @@ const CodeItem = ({ marketCoin }) => {
     symbol,
     market_cap,
     image,
+    id,
   } = marketCoin;
 
   let percentageColor = price_change_percentage_24h < 0 ? "#ea3943" : "#16c784";
@@ -29,8 +35,13 @@ const CodeItem = ({ marketCoin }) => {
     return marketCap;
   };
 
+  let navigation = useNavigation();
+
   return (
-    <View style={styles.coinContainer}>
+    <TouchableOpacity
+      style={styles.coinContainer}
+      onPress={() => navigation.navigate('CoinDetailScreen', {coinId: id})}
+    >
       <Image
         source={{
           uri: image,
@@ -46,12 +57,12 @@ const CodeItem = ({ marketCoin }) => {
           <Text style={styles.text}>{symbol.toUpperCase()}</Text>
 
           <AntDesign
-            name={price_change_percentage_24h < 0 ? 'caretdown' : 'caretup'}
+            name={price_change_percentage_24h < 0 ? "caretdown" : "caretup"}
             size={12}
             color={percentageColor}
             style={{ alignSelf: "center", marginRight: 5 }}
           />
-          <Text style={{color: percentageColor}}>
+          <Text style={{ color: percentageColor }}>
             {price_change_percentage_24h.toFixed(3)}%
           </Text>
         </View>
@@ -60,7 +71,7 @@ const CodeItem = ({ marketCoin }) => {
         <Text style={styles.title}>{current_price}</Text>
         <Text style={{ color: "white" }}>MCap {normalizeCap(market_cap)}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
