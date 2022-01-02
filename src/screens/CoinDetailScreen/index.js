@@ -17,45 +17,53 @@ import {
   ChartYLabel,
 } from "@rainbow-me/animated-charts";
 import { useRoute } from "@react-navigation/native";
-import { getDetailedCoinData, getCoinMarketChart } from '../../services/requests'
-
-
-let screenWidth = Dimensions.get("window").width;
+import {
+  getDetailedCoinData,
+  getCoinMarketChart,
+} from "../../services/requests";
 
 const CoinDetailScreen = () => {
+  let [coin, setCoin] = useState(null);
+  let [coinMarketData, setCoinMarketData] = useState(null);
+  let route = useRoute();
+  let {
+    params: { coinId },
+  } = route;
+  let [loading, setLoading] = useState(false);
+  let [coinValue, setCoinValue] = useState("1");
+  let [usdValue, setUsdValue] = useState('');
+
+  let fetchCoinData = async () => {
+    setLoading(true);
+    let fetchedCoinData = await getDetailedCoinData(coinId);
+    let fetchedCoinMarketData = await getCoinMarketChart(coinId);
+    setUsdValue(fetchedCoinData.market_data.current_price.usd.toString())
+    setCoin(fetchedCoinData);
+    setCoinMarketData(fetchedCoinMarketData);
+    setLoading(false);
+  };
+  useEffect(() => {
+    fetchCoinData();
+  }, []);
+
+
+  if (loading || !coin || !coinMarketData) {
+    return <ActivityIndicator size="large" />;
+  }
+
   let {
     image: { small },
     name,
     symbol,
-    prices,
     market_data: {
       market_cap_rank,
       current_price,
       price_change_percentage_24h,
     },
-  } = Coin;
+  } = coin;
+  let { prices } = coinMarketData;
 
-  let [coinValue, setCoinValue] = useState("1");
-  let [usdValue, setUsdValue] = useState(current_price.usd.toString());
-  let route = useRoute();
-  let { params: { coinId } } = route;
-  let [coin, setCoin] = useState(null)
-  let [coinMarketData, setCoinMarketData] = useState(nul)
-  let [loading, setLoading] = useState(false)
-
-
-  let fetchCoinData = async () => {
-    setLoading(true)
-    let fetchedCoinData =  await getDetailedCoinData(coinId)
-    let fetchedCoinMarketData = await getCoinMarketChart(coinId)
-    setCoinMarketData(fetchedCoinMarketData)
-    setCoin(fetchedCoinData)
-    setLoading(false)
-  }
-
-  useEffect(() =>{
-    fetchCoinData()
-  }, [])
+  let screenWidth = Dimensions.get("window").width;
 
   let formatCurrency = (value) => {
     "worklet";
@@ -75,10 +83,6 @@ const CoinDetailScreen = () => {
   let changeUsdValue = (value) => {
     setUsdValue(value);
   };
-
-  if (loading || !coin || !coinMarketData ) {
-    <ActivityIndicator size='large' />
-  }
 
   return (
     <View style={{ padding: 10 }}>
@@ -107,12 +111,12 @@ const CoinDetailScreen = () => {
               flexDirection: "row",
             }}
           >
-              <AntDesign
-                name={price_change_percentage_24h < 0 ? "caretdown" : "caretup"}
-                size={12}
-                color="white"
-                style={{ alignSelf: "center", marginRight: 5 }}
-              />
+            <AntDesign
+              name={price_change_percentage_24h < 0 ? "caretdown" : "caretup"}
+              size={12}
+              color="white"
+              style={{ alignSelf: "center", marginRight: 5 }}
+            />
             <Text style={styles.priceChange}>
               {price_change_percentage_24h.toFixed(2)}%
             </Text>

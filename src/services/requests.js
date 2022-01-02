@@ -3,7 +3,7 @@ import axios from "axios";
 export let getDetailedCoinData = async (coinId) => {
   try {
     let response = await axios.get(
-      `https://api.coingecko.com/api/v3/coins/${coinId}?tickers=false&market_data=false&community_data=false&developer_data=false`
+      `https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=true`
     );
     return response.data;
   } catch (e) {
@@ -11,10 +11,10 @@ export let getDetailedCoinData = async (coinId) => {
   }
 };
 
-export let getCoinMarketChart = async (coinID) => {
+export let getCoinMarketChart = async (coinId) => {
   try {
     let response = await axios.get(
-      `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=7`
+      `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=1&interval=hourly`
     );
     return response.data;
   } catch (e) {

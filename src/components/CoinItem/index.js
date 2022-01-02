@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 
 
 
-const CodeItem = ({ marketCoin }) => {
+const CoinItem = ({ marketCoin }) => {
 
   
   let {
@@ -75,4 +75,4 @@ const CodeItem = ({ marketCoin }) => {
   );
 };
 
-export default CodeItem;
+export default CoinItem;
